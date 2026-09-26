@@ -5,6 +5,9 @@ import { products } from "@/content/products";
 import { site } from "@/content/site";
 import { getArticles, getLegalPages } from "@/lib/content";
 
+// Required so this file can be built into the static site.
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const url = (path: string) => `${site.url}${path}`;
   const now = new Date();
