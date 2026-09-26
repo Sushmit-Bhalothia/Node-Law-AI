@@ -12,7 +12,10 @@ export const site = {
   description:
     "Node.law builds AI assistant tools for in-house counsel, law firms and legal operations teams — draft terms and privacy policies, and review NDAs and commercial contracts with precision.",
   // The live web address. Used for SEO, the sitemap and social sharing previews.
-  url: "https://node.law",
+  // The publishing workflow overrides this while the site is on its temporary
+  // GitHub address; it falls back to node.law, so change that when the real
+  // domain is ready.
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://node.law",
 
   email: "hello@node.law",
   securityEmail: "security@node.law",

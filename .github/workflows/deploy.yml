@@ -1,0 +1,75 @@
+# ==========================================================================
+# Publishes the website to GitHub Pages automatically.
+#
+# Runs every time changes reach the "main" branch. You can also start it by
+# hand: GitHub → Actions → "Publish website" → "Run workflow".
+#
+# ONE-TIME SETUP (do this once, in the browser):
+#   GitHub → your repository → Settings → Pages → under "Build and deployment",
+#   set Source to "GitHub Actions".
+# ==========================================================================
+
+name: Publish website
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # lets you run it manually from the Actions tab
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# If two publishes overlap, let the running one finish first.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web # the website lives in the web/ folder
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build the website
+        run: npm run build
+        env:
+          # These two lines are only needed while the site is published at
+          # https://counsel-in-code.github.io/Node-Law-AI/
+          # Delete them when you move to the node.law domain.
+          NEXT_PUBLIC_BASE_PATH: /Node-Law-AI
+          NEXT_PUBLIC_SITE_URL: https://counsel-in-code.github.io/Node-Law-AI
+
+      - name: Prepare for GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload the finished site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

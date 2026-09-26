@@ -56,6 +56,41 @@ web/
     └── lib/                Helpers (SEO tags, Markdown loading, validation)
 ```
 
+## Publishing the site
+
+The site publishes itself to **GitHub Pages** whenever changes reach the `main`
+branch, using `.github/workflows/deploy.yml`. Live address:
+
+**https://counsel-in-code.github.io/Node-Law-AI/**
+
+**One-time setup:** on GitHub, go to **Settings → Pages**, and under "Build and
+deployment" set **Source** to **GitHub Actions**. Without this the publish step
+fails.
+
+To watch a publish, open the **Actions** tab on GitHub. It takes about two
+minutes. To publish without changing anything, use **Actions → Publish website →
+Run workflow**.
+
+### Moving to the node.law domain later
+
+1. In `.github/workflows/deploy.yml`, delete the two `NEXT_PUBLIC_…` lines under
+   "Build the website".
+2. Create a file `web/public/CNAME` containing one line: `node.law`
+3. At your domain registrar, point the domain at GitHub Pages (GitHub shows the
+   exact records under Settings → Pages → Custom domain).
+
+Search engines are deliberately **blocked** while the site is on the temporary
+GitHub address, and allowed automatically once it is on node.law.
+
+### Notes on this kind of hosting
+
+- The site is published as plain HTML files, so `npm run start` is not used. To
+  preview the built site, run `npm run build` then `npx serve out`.
+- GitHub Pages cannot send security headers (such as X-Frame-Options). See the
+  note in `next.config.ts` if you later move to a host that can.
+- Images are served at their original size, so save photos at a sensible size
+  before putting them in `public/`.
+
 ## Before going live — checklist
 
 - [ ] Replace every `[PLACEHOLDER]` (search the `src/content` folder for it)
