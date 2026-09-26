@@ -1,26 +1,158 @@
+/* ==========================================================================
+   Node.law — global styles & design tokens
+   --------------------------------------------------------------------------
+   Change brand colours and fonts here. Every page uses these tokens through
+   Tailwind classes such as `bg-navy-900`, `text-gold-700`, `font-serif`.
+   ========================================================================== */
+
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* Primary — deep navy */
+  --color-navy-950: #06142a;
+  --color-navy-900: #0b1f3a;
+  --color-navy-800: #12294a;
+  --color-navy-700: #1d3a63;
+  --color-navy-100: #e7ecf3;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Accent — muted gold.
+     gold-500 is decorative only (lines, icons). Use gold-700 for text on
+     light backgrounds and gold-300 for text on navy (both pass WCAG AA). */
+  --color-gold-50: #f7f1e6;
+  --color-gold-300: #c9a56a;
+  --color-gold-500: #b08d57;
+  --color-gold-700: #8a6a35;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Neutrals */
+  --color-paper: #faf8f4;
+  --color-line: #e5e1d8;
+  --color-ink: #1f2937;
+  --color-muted: #5b6472;
+  --color-mist: #b8c2d1; /* secondary text on navy */
+
+  /* Risk colours — used in product mockups only */
+  --color-risk-high: #b42318;
+  --color-risk-high-bg: #fef3f2;
+  --color-risk-med: #b54708;
+  --color-risk-med-bg: #fffaeb;
+  --color-risk-low: #067647;
+  --color-risk-low-bg: #ecfdf3;
+
+  /* Motion */
+  --animate-fade-up: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  /* Homepage carousel timer bar (its duration is set in HeroCarousel.tsx) */
+  --animate-progress: progress 4s linear forwards;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes progress {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Fonts are loaded in src/app/layout.tsx and exposed as CSS variables. */
+@theme inline {
+  --font-serif: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-white font-sans text-ink antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif text-navy-900;
+    font-optical-sizing: auto;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    @apply bg-gold-50 text-navy-900;
+  }
+
+  /* Visible keyboard focus everywhere (WCAG 2.4.7) */
+  :focus-visible {
+    outline: 2px solid var(--color-gold-700);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  [data-tone="dark"] :focus-visible {
+    outline-color: var(--color-gold-300);
+  }
+
+  /* Anchor targets shouldn't hide under the sticky header */
+  [id] {
+    scroll-margin-top: 96px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Scroll reveal (see components/ui/FadeIn.tsx)
+   Only hides content when JavaScript is running and the visitor hasn't asked
+   for reduced motion — so content is never lost.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .js [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Subtle ruled-paper texture used behind page heroes */
+.bg-ruled {
+  background-image:
+    linear-gradient(to bottom, transparent 0, transparent calc(100% - 1px), rgb(11 31 58 / 0.045) 100%);
+  background-size: 100% 32px;
 }

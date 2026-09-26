@@ -1,13 +1,15 @@
 # Node Law AI
 
-An AI website that helps users draft legal documents such as NDAs and Terms & Conditions.
+Node.law — AI assistant tools for lawyers and in-house legal teams.
 
 ## Structure
 
 ```
 .
-├── web/     # Next.js app (website)
-└── rules/   # Rules for generating each document type
+├── web/            # Marketing website (Next.js) — see web/README.md
+│   └── src/content # ✏️ All editable website text — see web/src/content/README.md
+├── nda-review/     # Rules for the NDA review tool
+└── website-docs/   # Rules for generating each document type
 ```
 
 ## Getting started
