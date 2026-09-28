@@ -49,11 +49,14 @@ jobs:
       - name: Build the website
         run: npm run build
         env:
-          # These two lines are only needed while the site is published at
-          # https://counsel-in-code.github.io/Node-Law-AI/
-          # Delete them when you move to the node.law domain.
-          NEXT_PUBLIC_BASE_PATH: /Node-Law-AI
-          NEXT_PUBLIC_SITE_URL: https://counsel-in-code.github.io/Node-Law-AI
+          # These two lines put the site at the GitHub address of whichever
+          # account owns this copy of the repository, for example:
+          #   https://counsel-in-code.github.io/Node-Law-AI/
+          #   https://your-username.github.io/Node-Law-AI/   (a fork)
+          # They work them out automatically, so a fork needs no editing.
+          # ➡️  DELETE BOTH LINES when you move to the node.law domain.
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+          NEXT_PUBLIC_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
 
       - name: Prepare for GitHub Pages
         uses: actions/configure-pages@v5
